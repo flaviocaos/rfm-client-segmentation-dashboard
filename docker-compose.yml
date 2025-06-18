@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  rfm-dashboard:
+    build: .
+    container_name: rfm_dashboard_app
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+    restart: unless-stopped
