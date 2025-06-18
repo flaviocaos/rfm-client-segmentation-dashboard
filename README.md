@@ -102,3 +102,10 @@ Sinta-se à vontade para propor melhorias via fork e pull request. Veja as diret
 ## 📜 Licença
 
 Este projeto pode ser utilizado para fins educacionais, acadêmicos ou corporativos, desde que citada a fonte.
+
+![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Status](https://img.shields.io/badge/status-estável-brightgreen)
+![Contributions](https://img.shields.io/badge/contributions-bem%20vindas-blueviolet)
+![Streamlit](https://img.shields.io/badge/streamlit-1.10%2B-ff4b4b)
+
