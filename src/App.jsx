@@ -77,38 +77,7 @@ function Tip({text}){
   </span>;
 }
 
-function AIPlan({segment,clients}){
-  const [text,setText]=useState("");
-  const [loading,setLoad]=useState(false);
-  const [done,setDone]=useState(false);
-  const generate=async()=>{
-    setLoad(true);setText("");setDone(false);
-    const seg=clients.filter(c=>c.segment===segment);
-    const cnt=seg.length,rev=seg.reduce((a,c)=>a+c.mon,0);
-    const avgRec=Math.round(seg.reduce((a,c)=>a+c.rec,0)/cnt);
-    const avgF=(seg.reduce((a,c)=>a+c.freq,0)/cnt).toFixed(1);
-    const avgM=(rev/cnt).toFixed(2);
-    const prompt=`Você é especialista em CRM e marketing de retenção. Gere um plano de ação para o segmento "${segment}":\n- Clientes: ${cnt}\n- Receita total: R$ ${rev.toFixed(2)}\n- Recência média: ${avgRec} dias\n- Frequência média: ${avgF}x\n- Ticket médio: R$ ${avgM}\n- Churn estimado: ${(SEGS[segment].churn*100).toFixed(0)}%\n\nInclua: 1) Diagnóstico 2) 3 ações táticas 3) KPIs 4) Timeline. Use bullet points.`;
-    try{
-      const apiKey=import.meta.env.VITE_ANTHROPIC_API_KEY;
-      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})});
-      const d=await res.json();
-      setText(d.content?.[0]?.text||"Erro ao gerar plano.");
-    }catch{setText("Erro de conexão.");}
-    setLoad(false);setDone(true);
-  };
-  return(
-    <div style={{marginTop:16,padding:"16px 20px",borderRadius:14,background:"#f8f8f8",border:"1px solid #eee"}}>
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
-        <div style={{fontSize:13,fontWeight:500}}>Plano de ação IA — {segment}</div>
-        <button onClick={generate} disabled={loading} style={{fontSize:12,padding:"6px 14px",borderRadius:8,border:"none",background:SEGS[segment].hex,color:"#fff",cursor:loading?"wait":"pointer",opacity:loading?.7:1,fontWeight:500}}>
-          {loading?"Gerando...":done?"Regerar":"Gerar plano ✨"}
-        </button>
-      </div>
-      {text?<div style={{fontSize:13,lineHeight:1.7,whiteSpace:"pre-wrap"}}>{text}</div>:!loading&&<div style={{fontSize:12,color:"#999"}}>Clique em "Gerar plano" para receber recomendações personalizadas com IA.</div>}
-    </div>
-  );
-}
+
 
 function Scatter({data,filter,hovId,setHov}){
   const ref=useRef();
@@ -336,7 +305,6 @@ export default function App(){
             <div style={{fontSize:11,color:SEGS[hov.segment].tx,marginTop:2}}>Churn: {(hov.churnScore*100).toFixed(0)}%</div>
           </div>
         </div>}
-        {filter!=="Todos"&&<AIPlan segment={filter} clients={clients}/>}
       </div>}
 
       {/* Heatmap */}
@@ -455,7 +423,6 @@ export default function App(){
                     <span style={{fontWeight:600,color:SEGS[seg].tx}}>{v}</span>
                   </div>
                 ))}
-                <AIPlan segment={seg} clients={clients}/>
               </div>
             );
           })}
